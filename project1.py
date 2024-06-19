@@ -39,7 +39,11 @@ def hinge_loss_single(feature_vector, label, theta, theta_0):
         parameters.
     """
     # Your code here
-    raise NotImplementedError
+    hinge_loss = 1 - label * (np.dot(theta, feature_vector) + theta_0 )
+    if hinge_loss > 0:
+        return hinge_loss
+    else:
+        return float(0)
 
 
 
@@ -60,9 +64,11 @@ def hinge_loss_full(feature_matrix, labels, theta, theta_0):
         parameters.  This number should be the average hinge loss across all of
     """
 
-    # Your code here
-    raise NotImplementedError
-
+    avg_hinge_loss = float(0)
+    for i in range(len(labels)):
+        hinge_loss = hinge_loss_single(feature_matrix[i], labels[i], theta, theta_0)
+        avg_hinge_loss += hinge_loss
+    return float(avg_hinge_loss / len(feature_matrix))
 
 
 
