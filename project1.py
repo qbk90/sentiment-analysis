@@ -3,11 +3,9 @@ import numpy as np
 import random
 
 
-
 #==============================================================================
 #===  PART I  =================================================================
 #==============================================================================
-
 
 
 def get_order(n_samples):
@@ -20,7 +18,6 @@ def get_order(n_samples):
         indices = list(range(n_samples))
         random.shuffle(indices)
         return indices
-
 
 
 def hinge_loss_single(feature_vector, label, theta, theta_0):
@@ -39,12 +36,11 @@ def hinge_loss_single(feature_vector, label, theta, theta_0):
         parameters.
     """
     # Your code here
-    hinge_loss = 1 - label * (np.dot(theta, feature_vector) + theta_0 )
+    hinge_loss = 1 - label * (np.dot(theta, feature_vector) + theta_0)
     if hinge_loss > 0:
         return hinge_loss
     else:
         return float(0)
-
 
 
 def hinge_loss_full(feature_matrix, labels, theta, theta_0):
@@ -71,7 +67,6 @@ def hinge_loss_full(feature_matrix, labels, theta, theta_0):
     return float(avg_hinge_loss / len(feature_matrix))
 
 
-
 def perceptron_single_step_update(
         feature_vector,
         label,
@@ -93,9 +88,15 @@ def perceptron_single_step_update(
         the updated feature-coefficient parameter `theta` as a numpy array
         the updated offset parameter `theta_0` as a floating point number
     """
-    # Your code here
-    raise NotImplementedError
-
+    perceptron_test = label * (np.dot(current_theta, feature_vector) + current_theta_0)
+    epsilon = np.finfo(np.float32).eps  # aka machine epsilon
+    if perceptron_test < epsilon:
+        theta = current_theta + label * feature_vector
+        theta_0 = current_theta_0 + label
+    else:
+        theta = current_theta
+        theta_0 = current_theta_0
+    return theta, theta_0
 
 
 def perceptron(feature_matrix, labels, T):
@@ -120,15 +121,12 @@ def perceptron(feature_matrix, labels, T):
         the offset parameter `theta_0` as a floating point number
             (found also after T iterations through the feature matrix).
     """
-    # Your code here
-    raise NotImplementedError
+    theta = np.zeros(feature_matrix.shape[1])
+    theta_0 = float(0)
     for t in range(T):
-        for i in get_order(nsamples):
-            # Your code here
-            raise NotImplementedError
-    # Your code here
-    raise NotImplementedError
-
+        for i in get_order(feature_matrix.shape[0]):
+            theta, theta_0 = perceptron_single_step_update(feature_matrix[i], labels[i], theta, theta_0)
+    return theta, theta_0
 
 
 def average_perceptron(feature_matrix, labels, T):
@@ -192,7 +190,6 @@ def pegasos_single_step_update(
     raise NotImplementedError
 
 
-
 def pegasos(feature_matrix, labels, T, L):
     """
     Runs the Pegasos algorithm on a given set of data. Runs T iterations
@@ -224,11 +221,9 @@ def pegasos(feature_matrix, labels, T, L):
     raise NotImplementedError
 
 
-
 #==============================================================================
 #===  PART II  ================================================================
 #==============================================================================
-
 
 
 ##  #pragma: coderesponse template
@@ -237,7 +232,6 @@ def pegasos(feature_matrix, labels, T, L):
 ##  def classify_vector(feature_vector, theta, theta_0):
 ##      return 2*np.heaviside(decision_function(feature_vector, theta, theta_0), 0)-1
 ##  #pragma: coderesponse end
-
 
 
 def classify(feature_matrix, theta, theta_0):
@@ -298,7 +292,6 @@ def classifier_accuracy(
     raise NotImplementedError
 
 
-
 def extract_words(text):
     """
     Helper function for `bag_of_words(...)`.
@@ -316,7 +309,6 @@ def extract_words(text):
     return text.lower().split()
 
 
-
 def bag_of_words(texts, remove_stopword=False):
     """
     NOTE: feel free to change this code as guided by Section 3 (e.g. remove
@@ -330,7 +322,7 @@ def bag_of_words(texts, remove_stopword=False):
     """
     # Your code here
     raise NotImplementedError
-    
+
     indices_by_word = {}  # maps word to unique index
     for text in texts:
         word_list = extract_words(text)
@@ -340,7 +332,6 @@ def bag_of_words(texts, remove_stopword=False):
             indices_by_word[word] = len(indices_by_word)
 
     return indices_by_word
-
 
 
 def extract_bow_feature_vectors(reviews, indices_by_word, binarize=True):
@@ -364,7 +355,6 @@ def extract_bow_feature_vectors(reviews, indices_by_word, binarize=True):
         # Your code here
         raise NotImplementedError
     return feature_matrix
-
 
 
 def accuracy(preds, targets):
