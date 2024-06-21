@@ -197,8 +197,13 @@ def pegasos_single_step_update(
         real valued number with the value of theta_0 after the old updated has
         completed.
     """
-    # Your code here
-    raise NotImplementedError
+    pegasos_test = label * (np.dot(theta, feature_vector) + theta_0)
+    if pegasos_test <= 1:
+        theta = (1 - eta * L) * theta + eta * label * feature_vector
+        theta_0 = theta_0 + eta * label
+    else:
+        theta = (1 - eta * L) * theta
+    return theta, theta_0
 
 
 def pegasos(feature_matrix, labels, T, L):
