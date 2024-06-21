@@ -185,7 +185,7 @@ def pegasos_single_step_update(
     Args:
         `feature_vector` - A numpy array describing a single data point.
         `label` - The correct classification of the feature vector.
-        `L` - The lamba value being used to update the parameters.
+        `L` - The lambda value being used to update the parameters.
         `eta` - Learning rate to update parameters.
         `theta` - The old theta being used by the Pegasos
             algorithm before this update.
@@ -223,7 +223,7 @@ def pegasos(feature_matrix, labels, T, L):
             correct classification of the kth row of the feature matrix.
         `T` - An integer indicating how many times the algorithm
             should iterate through the feature matrix.
-        `L` - The lamba value being used to update the Pegasos
+        `L` - The lambda value being used to update the Pegasos
             algorithm parameters.
 
     Returns:
@@ -233,8 +233,16 @@ def pegasos(feature_matrix, labels, T, L):
         the value of the theta_0, the offset classification parameter, found
         after T iterations through the feature matrix.
     """
-    # Your code here
-    raise NotImplementedError
+    m, n = feature_matrix.shape
+    theta = np.zeros(n)
+    theta_0 = float(0)
+    t_counter = 0
+    for t in range(T):
+        for i in get_order(m):
+            t_counter += 1
+            eta = 1 / np.sqrt(t_counter)
+            theta, theta_0 = pegasos_single_step_update(feature_matrix[i], labels[i], L, eta, theta, theta_0)
+    return theta, theta_0
 
 
 #==============================================================================
