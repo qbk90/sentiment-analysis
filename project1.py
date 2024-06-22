@@ -275,8 +275,16 @@ def classify(feature_matrix, theta, theta_0):
         given theta and theta_0. If a prediction is GREATER THAN zero, it
         should be considered a positive classification.
     """
-    # Your code here
-    raise NotImplementedError
+    m, n = feature_matrix.shape
+    classified = np.empty(m)
+    for i in range(m):
+        classification_test = np.dot(theta, feature_matrix[i]) + theta_0
+        epsilon = np.finfo(np.float32).eps  # aka machine epsilon
+        if classification_test < epsilon:
+            classified[i] = -1
+        else:
+            classified[i] = 1
+    return classified
 
 
 def classifier_accuracy(
@@ -312,8 +320,12 @@ def classifier_accuracy(
         trained classifier on the training data and the second element is the
         accuracy of the trained classifier on the validation data.
     """
-    # Your code here
-    raise NotImplementedError
+    theta, theta_0 = classifier(train_feature_matrix, train_labels, **kwargs)
+    classified_training = classify(train_feature_matrix, theta, theta_0)
+    classified_validation = classify(val_feature_matrix, theta, theta_0)
+    training_accuracy = accuracy(classified_training, train_labels)
+    validation_accuracy = accuracy(classified_validation, val_labels)
+    return training_accuracy, validation_accuracy
 
 
 def extract_words(text):
